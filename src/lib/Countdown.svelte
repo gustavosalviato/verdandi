@@ -1,10 +1,8 @@
 <script lang="ts">
-  type Cycle = {
-    id: string
-    minutesAmount: number
-    startDate: Date
-    mode: 'work' | 'break'
-  }
+  import type { Cycle } from '$lib/types/cycle'
+  import { cycleStore } from '$lib/stores/cycles'
+  import { addCycle, setActiceCycle } from '$lib/actions/cycles'
+
   import { differenceInSeconds } from 'date-fns'
 
   export let time: number
@@ -15,8 +13,6 @@
   let completedCycles = 0
   let pomodoroAmount = 0
 
-  let cycles: Cycle[] = []
-  let activeCycleId: string | null = null
   let mode: 'work' | 'break' = 'break'
 
   let secondsPassed: number = 0
@@ -25,7 +21,7 @@
 
   function switchMode() {
     const nextMode: 'work' | 'break' = mode === 'work' ? 'break' : 'work'
-    let nextMinutes = nextMode === 'work' ? 0.1 : 0.1
+    let nextMinutes = nextMode === 'work' ? time : shortRestTime
 
     if (mode == 'work') {
       completedCycles += 1
@@ -41,7 +37,7 @@
 
     const newCycleId = crypto.randomUUID()
 
-    activeCycleId = newCycleId
+    setActiceCycle(newCycleId)
 
     const newCycle: Cycle = {
       id: newCycleId,
@@ -50,7 +46,10 @@
       startDate: new Date(),
     }
 
-    cycles = [newCycle, ...cycles]
+    addCycle({
+      cycle: newCycle,
+    })
+
     secondsPassed = 0
   }
 
@@ -60,10 +59,10 @@
     }
 
     interval = setInterval(() => {
-      if (activeCycle) {
+      if ($cycleStore.activeCycle) {
         const diffInSeconds = differenceInSeconds(
           new Date(),
-          activeCycle.startDate,
+          $cycleStore.activeCycle?.startDate,
         )
 
         if (diffInSeconds >= totalSeconds) {
@@ -73,7 +72,7 @@
           secondsPassed = diffInSeconds
         }
       }
-    }, 100)
+    }, 1000)
   }
 
   function handleStartNewCycle() {
@@ -81,24 +80,28 @@
 
     mode = 'work'
 
-    activeCycleId = id
-
     const newCycle: Cycle = {
       id,
-      minutesAmount: 0.1,
+      minutesAmount: time,
       startDate: new Date(),
       mode,
     }
 
-    cycles = [newCycle, ...cycles]
+    addCycle({
+      cycle: newCycle,
+    })
+
+    setActiceCycle(id)
+
     secondsPassed = 0
 
     tick()
   }
 
-  $: activeCycle = cycles.find(cycle => cycle.id === activeCycleId)
-  $: totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
-  $: currentSeconds = activeCycle ? totalSeconds - secondsPassed : 0
+  $: totalSeconds = $cycleStore.activeCycle
+    ? $cycleStore.activeCycle.minutesAmount * 60
+    : 0
+  $: currentSeconds = $cycleStore.activeCycle ? totalSeconds - secondsPassed : 0
 
   $: minutesAmount = Math.floor(currentSeconds / 60)
   $: secondsAmount = currentSeconds % 60
@@ -107,17 +110,21 @@
   $: seconds = secondsAmount.toString().padStart(2, '0')
 </script>
 
-<h2 class="text-xl text-center">
-  You are: {mode === 'work' ? 'working' : 'resting'}
-</h2>
+<div class="flex flex-col gap-1 items-center justify-center">
+  <h2 class="text-xl">You are:</h2>
 
-<h2 class="text-xl text-center">completed cycles: {completedCycles}</h2>
+  <span class="text-lg text-zinc-700">
+    {mode === 'work' ? 'Working' : 'Resting'}
+  </span>
+</div>
+
+<!-- <h2 class="text-xl text-center">completed cycles: {completedCycles}</h2>
 <h2 class="text-xl text-center">
   pomodoro {pomodoroAmount % cyclesNumber === 0 &&
     pomodoroAmount / cyclesNumber}
-</h2>
+</h2> -->
 
-{#if activeCycle}
+{#if $cycleStore.activeCycle}
   <h1 class="font-bold text-9xl text-center font-bebas tracking-wide">
     {`${minutes}:${seconds}`}
   </h1>
@@ -129,16 +136,24 @@
   <button
     on:click={handleStartNewCycle}
     type="button"
-    class="px-3 py-2 rounded-lg font-medium bg-zinc-900"
+    class="px-3 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-rose-300 to-rose-500"
   >
     Start
   </button>
 
-  <button type="button" class="px-3 py-2 rounded-lg font-medium bg-zinc-900">
-    Stop
+  <!-- <button
+    on:click={handleStartNewCycle}
+    type="button"
+    class="px-3 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-rose-300 to-rose-500"
+  >
+    Start
   </button>
 
-  <button type="button" class="px-3 py-2 rounded-lg font-medium bg-zinc-900">
-    Reset
-  </button>
+  <button
+    on:click={handleStartNewCycle}
+    type="button"
+    class="px-3 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-rose-300 to-rose-500"
+  >
+    Start
+  </button> -->
 </footer>
