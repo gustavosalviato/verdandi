@@ -13,6 +13,9 @@
   let completedCycles = 0
   let pomodoroAmount = 0
 
+  let isPaused = false
+  let pausedAt: Date | null = null
+
   let mode: 'work' | 'break' = 'break'
 
   let secondsPassed: number = 0
@@ -57,6 +60,8 @@
     }
 
     interval = setInterval(() => {
+      if (isPaused) return
+
       if ($cycleStore.activeCycle) {
         const diffInSeconds = differenceInSeconds(
           new Date(),
@@ -94,6 +99,21 @@
     tick()
   }
 
+  function handleToggleCountdown() {
+    if (isPaused) {
+      if (pausedAt) {
+        const pausedDuration = differenceInSeconds(new Date(), pausedAt)
+        $cycleStore.activeCycle!!.startDate = new Date(
+          $cycleStore.activeCycle!!.startDate.getTime() + pausedDuration * 1000,
+        )
+      }
+      pausedAt = null
+    } else {
+      pausedAt = new Date()
+    }
+    isPaused = !isPaused
+  }
+
   $: totalSeconds = $cycleStore.activeCycle
     ? $cycleStore.activeCycle.minutesAmount * 60
     : 0
@@ -114,13 +134,6 @@
   </span>
 </div>
 
-<h2 class="text-xl text-center">completed cycles: {completedCycles}</h2>
-<h2 class="text-xl text-center">
-  pomodoro {pomodoroAmount % cyclesNumber === 0
-    ? pomodoroAmount / cyclesNumber
-    : 0}
-</h2>
-
 {#if $cycleStore.activeCycle}
   <h1 class="font-bold text-9xl text-center font-bebas tracking-wide">
     {`${minutes}:${seconds}`}
@@ -129,28 +142,33 @@
   <h1 class="font-bold text-9xl text-center font-bebas tracking-wide">25:00</h1>
 {/if}
 
-<footer class="flex items-center gap-8 mx-auto">
-  <button
-    on:click={handleStartNewCycle}
-    type="button"
-    class="px-3 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-rose-300 to-rose-500"
-  >
-    Start
-  </button>
+<footer class="flex flex-col items-center gap-6 mx-auto">
+  <div class=" flex items-center gap-6">
+    <button
+      on:click={handleStartNewCycle}
+      type="button"
+      class="px-3 py-2 rounded-lg text-sm font-medium bg-gray-900 duration-300 transition-all ease-in-out hover:bg-gray-800"
+    >
+      Start
+    </button>
 
-  <!-- <button
-    on:click={handleStartNewCycle}
-    type="button"
-    class="px-3 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-rose-300 to-rose-500"
-  >
-    Start
-  </button>
+    <button
+      disabled={!$cycleStore.activeCycle}
+      on:click={handleToggleCountdown}
+      type="button"
+      class="disabled:cursor-not-allowed disabled:opacity-60 px-3 py-2 rounded-lg text-sm font-medium bg-gray-900 duration-300 transition-all ease-in-out hover:bg-gray-800"
+    >
+      {isPaused ? ' Resume' : 'Pause'}
+    </button>
+  </div>
 
-  <button
-    on:click={handleStartNewCycle}
-    type="button"
-    class="px-3 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-rose-300 to-rose-500"
-  >
-    Start
-  </button> -->
+  <span class="block">
+    completed cycles: <span class="text-zinc-400">{completedCycles}</span>
+  </span>
+
+  <span class="block">
+    full cycles completed: <span class="text-zinc-400">
+      {pomodoroAmount % cyclesNumber === 0 ? pomodoroAmount / cyclesNumber : 0}
+    </span>
+  </span>
 </footer>

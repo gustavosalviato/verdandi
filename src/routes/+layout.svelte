@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="flex flex-col items-center justify-center min-h-screen text-gray-50 px-10 bg-gradient-to-r from-rose-300 to-rose-500"
+  class="flex flex-col items-center justify-center min-h-screen text-gray-50 px-10 to-rose-500bg-gradient-to-b from-gray-900 to-gray-600 bg-gradient-to-r"
 >
   <div
     class="flex flex-col gap-10 w-full max-w-6xl mx-auto bg-zinc-900 rounded-xl py-16 px-20"
@@ -20,10 +20,6 @@
     <main class="flex flex-col gap-8">
       <slot />
     </main>
-
-    <div class="mx-auto flex flex-col gap-6 items-center justify-center">
-      <span>Completed pomodoros:</span>
-    </div>
   </div>
 </div>
 
