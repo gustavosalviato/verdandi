@@ -25,6 +25,7 @@
 	"type": "module",
 	"dependencies": {
 		"date-fns": "^3.6.0",
+		"lucide-svelte": "^0.395.0",
 		"prettier": "^3.3.2"
 	}
 }
