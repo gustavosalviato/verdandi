@@ -35,12 +35,8 @@
     }
     mode = nextMode
 
-    const newCycleId = crypto.randomUUID()
-
-    setActiceCycle(newCycleId)
-
     const newCycle: Cycle = {
-      id: newCycleId,
+      id: crypto.randomUUID(),
       mode,
       minutesAmount: nextMinutes,
       startDate: new Date(),
@@ -49,6 +45,8 @@
     addCycle({
       cycle: newCycle,
     })
+
+    setActiceCycle(newCycle.id)
 
     secondsPassed = 0
   }
@@ -76,12 +74,10 @@
   }
 
   function handleStartNewCycle() {
-    const id = crypto.randomUUID()
-
     mode = 'work'
 
     const newCycle: Cycle = {
-      id,
+      id: crypto.randomUUID(),
       minutesAmount: time,
       startDate: new Date(),
       mode,
@@ -91,7 +87,7 @@
       cycle: newCycle,
     })
 
-    setActiceCycle(id)
+    setActiceCycle(newCycle.id)
 
     secondsPassed = 0
 
@@ -118,11 +114,12 @@
   </span>
 </div>
 
-<!-- <h2 class="text-xl text-center">completed cycles: {completedCycles}</h2>
+<h2 class="text-xl text-center">completed cycles: {completedCycles}</h2>
 <h2 class="text-xl text-center">
-  pomodoro {pomodoroAmount % cyclesNumber === 0 &&
-    pomodoroAmount / cyclesNumber}
-</h2> -->
+  pomodoro {pomodoroAmount % cyclesNumber === 0
+    ? pomodoroAmount / cyclesNumber
+    : 0}
+</h2>
 
 {#if $cycleStore.activeCycle}
   <h1 class="font-bold text-9xl text-center font-bebas tracking-wide">
