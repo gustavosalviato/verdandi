@@ -10,9 +10,6 @@
   export let shortRestTime: number
   export let cyclesNumber: number
 
-  let completedCycles = 0
-  let pomodoroAmount = 0
-
   let isPaused = false
   let pausedAt: Date | null = null
 
@@ -27,10 +24,10 @@
     let nextMinutes = nextMode === 'work' ? time : shortRestTime
 
     if (mode == 'work') {
-      completedCycles += 1
-      pomodoroAmount += 1
+      $cycleStore.completedCycles += 1
 
-      if (completedCycles % cyclesNumber === 0) {
+      if ($cycleStore.completedCycles % cyclesNumber === 0) {
+        $cycleStore.fullCompletedCycles += 1
         nextMinutes = longRestTime
       } else {
         nextMinutes = shortRestTime
@@ -169,12 +166,14 @@
   </div>
 
   <span class="block">
-    completed cycles: <span class="text-zinc-400">{completedCycles}</span>
+    completed cycles: <span class="text-zinc-400"
+      >{$cycleStore.completedCycles}</span
+    >
   </span>
 
   <span class="block">
-    full cycles completed: <span class="text-zinc-400">
-      {pomodoroAmount % cyclesNumber === 0 ? pomodoroAmount / cyclesNumber : 0}
-    </span>
+    full cycles completed: <span class="text-zinc-400"
+      >{$cycleStore.fullCompletedCycles}</span
+    >
   </span>
 </footer>
