@@ -124,6 +124,12 @@
 
   $: minutes = minutesAmount.toString().padStart(2, '0')
   $: seconds = secondsAmount.toString().padStart(2, '0')
+
+  $: {
+    if ($cycleStore.activeCycle) {
+      document.title = `${mode === 'work' ? 'Working' : 'Resting'} - ${minutes}:${seconds}`
+    }
+  }
 </script>
 
 <div class="flex flex-col gap-1 items-center justify-center">

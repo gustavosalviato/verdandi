@@ -1,5 +1,8 @@
-<script>
+<script lang="ts">
   import '../app.css'
+  import { page } from '$app/stores'
+
+  import { Clock, History } from 'lucide-svelte/icons'
 </script>
 
 <div
@@ -12,8 +15,18 @@
       <strong class="text-2xl tracking-tighter">⌛ Verdandi</strong>
 
       <nav class="flex items-center gap-4">
-        <a href="/">Timer</a>
-        <a href="/history">History</a>
+        <a
+          href="/"
+          title="Countdown"
+          class={`${$page.route.id === '/' && 'text-amber-100'}`}><Clock /></a
+        >
+        <a
+          href="/history"
+          title="Cycles history"
+          class={`${$page.route.id === '/history' && 'text-amber-100'}`}
+        >
+          <History />
+        </a>
       </nav>
     </header>
 
@@ -22,5 +35,3 @@
     </main>
   </div>
 </div>
-
-<slot />
