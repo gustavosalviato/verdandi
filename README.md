@@ -1,20 +1,19 @@
-<h1 align="center"> ⌛ Verdandi </h1>
+<h1 align="center">⌛ Verdandi</h1>
 
-<p align="center">
-<a href="#-about">About</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-get-start">Get start</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-tecnologies">Tecnologies</a>&nbsp;&nbsp;&nbsp;
-</p>
-
-<br>
+<br/>
 
 ## About
 
-Verdandi is a Pomodoro-like timer built with Svelte and Tailwind CSS.
+Verdandi is a pomodoro-like timer built with Svelte and Tailwind CSS.
 
 <p align="center">
   <img alt="" src=".github/preview.png" width="100%">
 </p>
+
+
+## Pomodoro
+To learn more about the pomodoro technique click <a href="https://pt.wikipedia.org/wiki/T%C3%A9cnica_pomodoro">here</a>.
+
 
 ## Get Start
 
