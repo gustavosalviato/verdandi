@@ -1,7 +1,3 @@
-<h1 align="center">⌛ Verdandi</h1>
-
-<br/>
-
 ## About
 
 Verdandi is a pomodoro-like timer built with Svelte and Tailwind CSS.
