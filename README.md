@@ -12,7 +12,7 @@ Verdandi is a pomodoro-like timer built with Svelte and Tailwind CSS.
 
 
 ## Pomodoro
-To learn more about the pomodoro technique click <a href="https://pt.wikipedia.org/wiki/T%C3%A9cnica_pomodoro">here</a>.
+To learn more about the pomodoro technique click <a target="_blank" href="https://pt.wikipedia.org/wiki/T%C3%A9cnica_pomodoro">here</a>.
 
 
 ## Get Start
